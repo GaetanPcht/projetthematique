@@ -24,8 +24,9 @@ class Calendar(models.Model):
     end_date = models.CharField(max_length=8, default='YYYYDDMM')
 
 class Calendar_dates(models.Model):
-    service_id = models.ForeignKey('Calendar', on_delete=models.CASCADE) #LIEN VERS calendar
-    date = models.CharField(max_length=8, default='YYYYDDMM')
+    #magouille, service_id n'est pas unique mais date si
+    service_id = models.CharField(max_length=3, default='')
+    date = models.CharField(primary_key=True, max_length=8, default='YYYYDDMM')
     exception_type = models.CharField(max_length=1, default='1') 
 
 class Routes(models.Model):
@@ -84,7 +85,7 @@ class Trips(models.Model):
     shape_id = models.ForeignKey('Shapes', on_delete=models.CASCADE) #LIEN VERS SHAPES
     
 class Stop_times(models.Model):
-    trip_id = models.ForeignKey('Trips', on_delete=models.CASCADE, default='DEFAULT') #LIEN VERS ROUTES
+    trip_id = models.ForeignKey('Trips', on_delete=models.CASCADE, default='DEFAULT') #LIEN VERS TRIPS
     arrival_time = models.TimeField(default='00:00:00')
     departure_time = models.TimeField(default='00:00:00')
     stop_id = models.ForeignKey('Stops', on_delete=models.CASCADE, default='DEFAULT') #LIEN VERS AGENCY
