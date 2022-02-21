@@ -22,3 +22,10 @@ class Calendar(models.Model):
     sunday = models.CharField(max_length=1, default='0')
     start_date = models.CharField(max_length=8, default='YYYYDDMM')
     end_date = models.CharField(max_length=8, default='YYYYDDMM')
+
+class Calendar_dates(models.Model):
+    service_id = models.ForeignKey('Calendar', on_delete=models.CASCADE)
+    date = models.CharField(max_length=8, default='YYYYDDMM')
+    exception_type = models.CharField(max_length=1, default='1') 
+
+    

@@ -9,3 +9,8 @@ admin.site.register(Agency, AgencyAdmin)
 class CalendarAdmin(admin.ModelAdmin):
     list_display = ('service_id', 'monday','tuesday', 'wednesday','thursday', 'friday', 'saturday', 'sunday', 'start_date', 'end_date', )
 admin.site.register(Calendar, CalendarAdmin)
+
+class Calendar_datesAdmin(admin.ModelAdmin):
+    list_display = ('service_id', 'date','exception_type',)
+admin.site.register(Calendar_dates, Calendar_datesAdmin)
+
