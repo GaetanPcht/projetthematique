@@ -17,11 +17,12 @@ from django.urls import include, path
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from app.views import AgencyAPIView, CalendarAPIView, CalendarDatesAPIView, GTFSToJsonAPIView, RoutesAPIView, ShapesAPIView, StopTimesAPIView, StopsAPIView, StopsExtensionsAPIView, TransfersAPIView, TripsAPIView
+from app.views import HomeAPIView, AgencyAPIView, CalendarAPIView, CalendarDatesAPIView, GTFSToJsonAPIView, RoutesAPIView, ShapesAPIView, StopTimesAPIView, StopsAPIView, StopsExtensionsAPIView, TransfersAPIView, TripsAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
+    path('', HomeAPIView),
     path('gtfs-to-json/', GTFSToJsonAPIView.as_view()),
     path('gtfs-to-json/agency/', AgencyAPIView.as_view()),
     path('gtfs-to-json/calendar/', CalendarAPIView.as_view()),
@@ -33,14 +34,4 @@ urlpatterns = [
     path('gtfs-to-json/transfers/', TransfersAPIView.as_view()),
     path('gtfs-to-json/trips/', TripsAPIView.as_view()),
     path('gtfs-to-json/stop-times/', StopTimesAPIView.as_view()),
-
-
-
-
-
-
-
 ]
-
-# urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

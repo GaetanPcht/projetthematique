@@ -1,0 +1,36 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+header {
+    background-color: #032e5a;
+    padding: 20px;
+}
+header nav ul {
+    display: flex;
+    justify-content: space-around;
+    padding: 0;
+    list-style-type: none;
+}
+
+header nav ul a {
+    color: #fff;
+    position: relative;
+    display: block;
+    text-decoration: none;
+}
+
+header nav ul a::after {
+    content: "";
+    position: absolute;
+    width: 20%;
+    background-color: #fff;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    transition: all .25s ease-in-out;
+}
+
+header nav ul a:hover::after {
+    width: 100%;
+}
