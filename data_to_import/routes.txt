@@ -1,41 +1,43 @@
 route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color
-AMIT49-1,Ametis - Keolis Amiens,"T49","Guignemicourt - Collège Sagebien","",3,,ECDF2D,17202A
-AMIT47-1,Ametis - Keolis Amiens,"T47","Collège Jules Verne <> Camon Miroir","",3,,ECDF2D,17202A
-AMIT45-1,Ametis - Keolis Amiens,"T45","Pierre Corneille / Lycée La Hotoie","",3,,ECDF2D,17202A
-AMIT44-1,Ametis - Keolis Amiens,"T44","Pont de Metz / Collège Jean-Marc Laurent","",3,,ECDF2D,17202A
-AMIT43-1,Ametis - Keolis Amiens,"T43","Collège Edouard Lucas <> Général Foy","",3,,ECDF2D,17202A
-AMIT42-1,Ametis - Keolis Amiens,"T42","Collège Edouard Lucas <> Gutenberg","",3,,ECDF2D,17202A
-AMIT41-1,Ametis - Keolis Amiens,"T41","Nicole Fontaine <> La Providence","",3,,ECDF2D,17202A
-AMIT40-1,Ametis - Keolis Amiens,"T40","Collège Jean Marc Laurent <> Saleux","",3,,ECDF2D,17202A
-AMIT39-1,Ametis - Keolis Amiens,"T39","Lycée du Paraclet <> Gare du Nord","",3,,ECDF2D,17202A
-AMIT38-1,Ametis - Keolis Amiens,"T38","Boves M. Barbier <> Collège Joliot-Curie","",3,,ECDF2D,17202A
-AMIT37-1,Ametis - Keolis Amiens,"T37","Collège Jules Verne <> Le Ramponneau","",3,,ECDF2D,17202A
-AMIT36-1,Ametis - Keolis Amiens,"T36","Collège la Salle <> Vers-sur-Selle","",3,,ECDF2D,17202A
-AMIT31-1,Ametis - Keolis Amiens,"T31","Gare du Nord / AFPA","",3,,ECDF2D,17202A
-AMIRSG008,Ametis - Keolis Amiens,"R66","Querrieu <> Gare du Nord","",3,,747984,FFFFFF
-AMIRSG007,Ametis - Keolis Amiens,"R65","Saint Vaast en chaussée <> gare du Nord","",3,,747984,FFFFFF
-AMIRSG004,Ametis - Keolis Amiens,"R64","Camon Miroir <> Camon","",3,,747984,FFFFFF
-AMIRSG003,Ametis - Keolis Amiens,"R63","Creuse < > Gare du Nord","",3,,747984,FFFFFF
-AMIRSG002,Ametis - Keolis Amiens,"R62","Estrées-sur-Noye < > Gare du Nord","",3,,747984,FFFFFF
-AMIRSG001,Ametis - Keolis Amiens,"R61","Rémiencourt <> Gare du Nord","",3,,747984,FFFFFF
-AMIRSG015,Ametis - Keolis Amiens,"Nav SP","Navette marché St Pierre","",3,,CC1719,FFFFFF
-AMIRSG014,Ametis - Keolis Amiens,"Nav A","Navette marché St Maurice","",3,,93B749,FFFFFF
-AMICDV-1,Ametis - Keolis Amiens,"CDV","Cœur De Ville","",3,,9AC55D,FFFFFF
-AMI16-1,Ametis - Keolis Amiens,"16","Saveuse / Gare du Nord","",3,,6B8178,FFFFFF
-AMI15-1,Ametis - Keolis Amiens,"15","Dury / Gare du Nord","",3,,276F74,FFFFFF
-AMI14-1,Ametis - Keolis Amiens,"14","Gare du Nord <> Petit Blangy","",3,,6F6AA7,FFFFFF
-AMI13-1,Ametis - Keolis Amiens,"13","Centre Commercial Glisy <> Gare du Nord","",3,,276F74,FFFFFF
-AMI12-1,Ametis - Keolis Amiens,"12","Bertangles / Sains-en-Amiénois","",3,,276F74,FFFFFF
-AMI11-1,Ametis - Keolis Amiens,"11","Etouvie / Saleux","",3,,902622,FFFFFF
-AMI10-1,Ametis - Keolis Amiens,"10","Centre commercial Glisy / Boves M.Barbier - CHU A. Picardie","",3,,E2007E,FFFFFF
-AMI9-1,Ametis - Keolis Amiens,"9","La Haute Borne - Allonville / Vers-sur-Selle - Laënnec","",3,,606496,FFFFFF
-AMI8-1,Ametis - Keolis Amiens,"8","Etouvie / Gare du Nord","",3,,EF922C,FFFFFF
-AMI7-1,Ametis - Keolis Amiens,"7","CHU A.Picardie / ZA La Blanche Tâche","",3,,266332,FFFFFF
-AMI6-1,Ametis - Keolis Amiens,"6","Pôle d'Echanges Nord / Görlitz","",3,,59368B,FFFFFF
-AMI5B-1,Ametis - Keolis Amiens,"5B","Laënnec","",3,,E77EB1,FFFFFF
-AMI5A-1,Ametis - Keolis Amiens,"5A","Laënnec","",3,,E77EB1,FFFFFF
-AMIL-1,Ametis - Keolis Amiens,"L","Centre Commercial Nord - Pôle d’Echanges Nord /  CHU A.Picardie","",3,,83216B,FFFFFF
-AMIN4-1,Ametis - Keolis Amiens,"N4","Pôle Licorne P+R / Longueau SNCF","",3,,FBC700,FFFFFF
-AMIN3-1,Ametis - Keolis Amiens,"N3","Promenade P+R / Centre commercial Sud","",3,,49A143,FFFFFF
-AMIN2-1,Ametis - Keolis Amiens,"N2","La Paix / IUT P+R","",3,,CB261E,FFFFFF
-AMIN1-1,Ametis - Keolis Amiens,"N1","Etouvie / Pôle Jules Verne","",3,,307FC0,FFFFFF
+AMIT49-1,ametis,"T49","Guignemicourt <> Collège Sagebien","",3,,ECDF2D,17202A
+AMIT47-1,ametis,"T47","Collège Jules Verne <> Camon Miroir","",3,,ECDF2D,17202A
+AMIT45-1,ametis,"T45","Pierre Corneille <> Lycée La Hotoie","",3,,ECDF2D,17202A
+AMIT44-1,ametis,"T44","Pont de Metz <> Collège Jean-Marc Laurent","",3,,ECDF2D,17202A
+AMIT43-1,ametis,"T43","Collège Edouard Lucas <> Général Foy","",3,,ECDF2D,17202A
+AMIT42-1,ametis,"T42","Collège Edouard Lucas <> Gutenberg","",3,,ECDF2D,17202A
+AMIT41-1,ametis,"T41","Nicole Fontaine <> La Providence","",3,,ECDF2D,17202A
+AMIT40-1,ametis,"T40","Collège Jean Marc Laurent <> Saleux","",3,,ECDF2D,17202A
+AMIT39-1,ametis,"T39","Lycée du Paraclet <> Gare du Nord","",3,,ECDF2D,17202A
+AMIT38-1,ametis,"T38","Boves M. Barbier <> Collège Joliot-Curie","",3,,ECDF2D,17202A
+AMIT37-1,ametis,"T37","Collège Jules Verne <> Le Ramponneau","",3,,ECDF2D,17202A
+AMIT36-1,ametis,"T36","Collège la Salle <> Vers-sur-Selle","",3,,ECDF2D,17202A
+AMIT31-1,ametis,"T31","Gare du Nord <> AFPA","",3,,ECDF2D,17202A
+AMIRSG017,ametis,"T33","Chardin <> Roland Douay","",3,,C4C072,17202A
+AMIRSG008,ametis,"R66","Querrieu <> Gare du Nord","",3,,747984,
+AMIRSG007,ametis,"R65","Saint Vaast en chaussée <> gare du Nord","",3,,747984,
+AMIRSG004,ametis,"R64","Camon Miroir <> Camon","",3,,747984,
+AMIRSG003,ametis,"R63","Creuse < > Gare du Nord","",3,,747984,
+AMIRSG002,ametis,"R62","Estrées-sur-Noye < > Gare du Nord","",3,,747984,
+AMIRSG001,ametis,"R61","Rémiencourt <> Gare du Nord","",3,,747984,
+AMIRSG015,ametis,"Nav SP","Navette marché St Pierre","",3,,CC1719,
+AMIRSG014,ametis,"Nav A","Navette marché St Maurice","",3,,93B749,
+AMICDV-1,ametis,"CDV","Cœur De Ville","",3,,9AC55D,FFFFFF
+AMI16-1,ametis,"16","Saveuse <> Gare du Nord","",3,,6B8178,FFFFFF
+AMI15-1,ametis,"15","Dury <> Gare du Nord","",3,,276F74,FFFFFF
+AMI14-1,ametis,"14","Gare du Nord <> Petit Blangy","",3,,6F6AA7,FFFFFF
+AMI13-1,ametis,"13","Centre Commercial Glisy <> Gare du Nord","",3,,276F74,FFFFFF
+AMI12-1,ametis,"12","Bertangles <> Sains-en-Amiénois","",3,,276F74,FFFFFF
+AMI11-1,ametis,"11","Gare du Nord <> Saleux","",3,,902622,FFFFFF
+AMIRSG016,ametis,"11B","Etouvie <> Gare du Nord","",3,,902622,000000
+AMI10-1,ametis,"10","Centre commercial Glisy <> Boves M.Barbier - CHU A. Picardie","",3,,E2007E,FFFFFF
+AMI9-1,ametis,"9","La Haute Borne - Allonville <> Vers-sur-Selle - Laënnec","",3,,606496,FFFFFF
+AMI8-1,ametis,"8","Etouvie <> Gare du Nord","",3,,EF922C,FFFFFF
+AMI7-1,ametis,"7","CHU A.Picardie <> ZA La Blanche Tâche","",3,,266332,FFFFFF
+AMI6-1,ametis,"6","Pôle d'Echanges Nord <> Görlitz","",3,,59368B,FFFFFF
+AMI5B-1,ametis,"5B","Laënnec","",3,,E77EB1,FFFFFF
+AMI5A-1,ametis,"5A","Laënnec","",3,,E77EB1,FFFFFF
+AMIL-1,ametis,"L","Centre Commercial Nord - Pôle d’Echanges Nord <>  CHU A.Picardie","",3,,83216B,FFFFFF
+AMIN4-1,ametis,"N4","Pôle Licorne P+R <> Longueau SNCF","",3,,FBC700,FFFFFF
+AMIN3-1,ametis,"N3","Promenade P+R <> Centre commercial Sud","",3,,49A143,FFFFFF
+AMIN2-1,ametis,"N2","La Paix <> IUT P+R","",3,,CB261E,FFFFFF
+AMIN1-1,ametis,"N1","Etouvie <> Pôle Jules Verne","",3,,307FC0,FFFFFF
