@@ -1,5 +1,6 @@
+from calendar import calendar
 from django.http import JsonResponse
-import urllib.request, zipfile, os, glob, time
+import urllib.request, zipfile, os, glob, time, requests, json
 from django.template.response import TemplateResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -15,6 +16,7 @@ from app.models import (
     Transfers,
     Trips,
     Stop_times,
+    ZipUrl,
 )
 from app.serializers import (
     AgencySerializer,
@@ -130,17 +132,84 @@ class StopTimesAPIView(APIView):
 start_time = time.time()
 
 
+# def downloadGTFSFile():
+#     print(round(time.time() - start_time, 1), "ending function")
+#     files = glob.glob("data_to_import/*")
+#     for f in files:
+#         os.remove(f)
+#     url = "https://transport-data-gouv-fr-resource-history-prod.cellar-c2.services.clever-cloud.com/1e116130-3670-496d-b8dc-cb8c628dd8b6/1e116130-3670-496d-b8dc-cb8c628dd8b6.20220217.120214.919497.zip"
+#     urllib.request.urlretrieve(url, "data_to_import/data.zip")
+
+#     with zipfile.ZipFile("data_to_import/data.zip", "r") as zip_ref:
+#         zip_ref.extractall("data_to_import")
+
+#     zipFile = glob.glob("data_to_import/data.zip")
+#     for f in zipFile:
+#         os.remove(f)
+
 def downloadGTFSFile():
-    print(round(time.time() - start_time, 1), "ending function")
-    files = glob.glob("data_to_import/*")
-    for f in files:
-        os.remove(f)
-    url = "https://transport-data-gouv-fr-resource-history-prod.cellar-c2.services.clever-cloud.com/1e116130-3670-496d-b8dc-cb8c628dd8b6/1e116130-3670-496d-b8dc-cb8c628dd8b6.20220217.120214.919497.zip"
-    urllib.request.urlretrieve(url, "data_to_import/data.zip")
+    if checkUpdateFile():
+        files = glob.glob("data_to_import/*")
+        for f in files:
+            os.remove(f)
+        url = ZipUrl.objects.get(zipurl_id = 0).get()
+        print(url)
+        urllib.request.urlretrieve(url, "data_to_import/data.zip")
 
-    with zipfile.ZipFile("data_to_import/data.zip", "r") as zip_ref:
-        zip_ref.extractall("data_to_import")
+        with zipfile.ZipFile("data_to_import/data.zip", "r") as zip_ref:
+            zip_ref.extractall("data_to_import")
 
-    zipFile = glob.glob("data_to_import/data.zip")
-    for f in zipFile:
-        os.remove(f)
+        zipFile = glob.glob("data_to_import/data.zip")
+        for f in zipFile:
+            os.remove(f)
+        updateDB()
+
+
+def checkUpdateFile():
+    url = "https://transport.data.gouv.fr/api/datasets/6033a87b4e276fd6499986bf"
+    headers = {"user-agent": "my-app/0.0.1"}
+    response = requests.get(url, headers=headers)
+    responseJSON = json.loads(response.text)
+    try:
+        if ZipUrl.objects.get(zipurl_id = 0).get() != responseJSON["history"][0]["payload"]["permanent_url"]:
+            zipurl =  ZipUrl.objects.create(zipurl_id = 0, zipurl_value=responseJSON["history"][0]["payload"]["permanent_url"])
+            zipurl.save()
+            return True
+    except ZipUrl.DoesNotExist:
+        zipurl =  ZipUrl.objects.create(zipurl_id = 0, zipurl_value=responseJSON["history"][0]["payload"]["permanent_url"])
+        zipurl.save()
+        return True
+    return True
+
+def updateDB():
+    Agency.objects.all().delete()
+    Calendar_dates.objects.all().delete()
+    Calendar.objects.all().delete()
+    Routes.objects.all().delete()
+    Shapes.objects.all().delete()
+    Stop_extensions.objects.all().delete()
+    Stop_times.objects.all().delete()
+    Stops.objects.all().delete()
+    Transfers.objects.all().delete()
+    Trips.objects.all().delete()
+    agencyFile = open("data_to_import/agency.txt", "r")
+    for i, line in enumerate(agencyFile.read().split('\n')):
+        if line != '' and i != 0:
+            data = line.split(',')
+            agency =  Agency.objects.create(agency_id = data[0], agency_name=data[1], agency_url=data[2], agency_timezone=data[3], agency_lang=data[4])
+            agency.save()
+    calendar_datesFile = open("data_to_import/calendar_dates.txt", "r")
+    # for i, line in enumerate(calendar_datesFile.read().split('\n')):
+    #     if line != '' and i != 0:
+    #         data = line.split(',')
+    #         agency =  Agency.objects.create(agency_id = data[0], agency_name=data[1], agency_url=data[2], agency_timezone=data[3], agency_lang=data[4])
+    #         agency.save()
+    calendarFile = open("data_to_import/calendar.txt", "r")
+    routesFile = open("data_to_import/routes.txt", "r")
+    shapesFile = open("data_to_import/shapes.txt", "r")
+    stop_extensionsFile = open("data_to_import/stop_extensions.txt", "r")
+    stop_timesFile = open("data_to_import/stop_times.txt", "r")
+    stopsFile = open("data_to_import/stops.txt", "r")
+    transfersFile = open("data_to_import/transfers.txt", "r")
+    tripsFile = open("data_to_import/trips.txt", "r")
+    # print(agencyFile.read())

@@ -119,3 +119,12 @@ class Stop_times(models.Model):
     stop_time_desc = models.CharField(max_length=1, default="")
     pickup_type = models.CharField(max_length=1, default="")
     drop_off_type = models.CharField(max_length=1, default="")
+
+class ZipUrl(models.Model):
+    zipurl_id = models.AutoField(primary_key=True)
+    zipurl_value = models.CharField(max_length=255, default="")
+    def get(self):
+        return self.zipurl_value
+
+    def __str__(self):
+        return u'%s' % (self.zipurl_value)

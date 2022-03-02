@@ -147,3 +147,12 @@ class TripsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Trips, TripsAdmin)
+
+class ZipUrlAdmin(admin.ModelAdmin):
+    list_display = (
+        "zipurl_id",
+        "zipurl_value",
+    )
+
+
+admin.site.register(ZipUrl, ZipUrlAdmin)
