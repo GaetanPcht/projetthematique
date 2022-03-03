@@ -179,7 +179,7 @@ def checkUpdateFile():
         zipurl =  ZipUrl.objects.create(zipurl_id = 0, zipurl_value=responseJSON["history"][0]["payload"]["permanent_url"])
         zipurl.save()
         return True
-    return True
+    return False # Mettre à True pour récupérer les données
 
 def updateDB():
     Agency.objects.all().delete()
@@ -205,15 +205,15 @@ def updateDB():
             )
             agency.save()
     calendar_datesFile = open("data_to_import/calendar_dates.txt", "r")
-    # for i, line in enumerate(calendar_datesFile.read().split('\n')):
-    #     if line != '' and i != 0:
-    #         data = line.split(',')
-    #         calendar_dates =  Calendar_dates.objects.create(
-    #           service_id = data[0], 
-    #           date = data[1], 
-    #           exception_type = data[2], 
-    #         )
-    #         calendar_dates.save()
+    for i, line in enumerate(calendar_datesFile.read().split('\n')):
+        if line != '' and i != 0:
+            data = line.split(',')
+            calendar_dates =  Calendar_dates.objects.create(
+              service_id = data[0], 
+              date = data[1], 
+              exception_type = data[2], 
+            )
+            calendar_dates.save()
     calendarFile = open("data_to_import/calendar.txt", "r")
     for i, line in enumerate(calendarFile.read().split('\n')):
         if line != '' and i != 0:
@@ -232,57 +232,60 @@ def updateDB():
           )
             calendar.save()
     routesFile = open("data_to_import/routes.txt", "r")
-    # for i, line in enumerate(routesFile.read().split('\n')):
-    #     if line != '' and i != 0:
-    #         data = line.split(',')
-    #         routes =  Routes.objects.create(
-    #           route_id = data[0], 
-    #           agency_id = data[1], 
-    #           route_short_name = data[2], 
-    #           route_long_name = data[3], 
-    #           route_desc = data[4],
-    #           route_type = data[5],
-    #           route_url = data[6],
-    #           route_color = data[7],
-    #           route_text_color = data[8],
-    #         )
-    #         routes.save()
+    for i, line in enumerate(routesFile.read().split('\n')):
+        if line != '' and i != 0:
+            data = line.split(',')
+            routes =  Routes.objects.create(
+              route_id = data[0], 
+              agency_id = data[1], 
+              route_short_name = data[2], 
+              route_long_name = data[3], 
+              route_desc = data[4],
+              route_type = data[5],
+              route_url = data[6],
+              route_color = data[7],
+              route_text_color = data[8],
+            )
+            routes.save()
     shapesFile = open("data_to_import/shapes.txt", "r")
-    # for i, line in enumerate(shapesFile.read().split('\n')):
-    #     if line != '' and i != 0:
-    #         data = line.split(',')
-    #         shapes =  Shapes.objects.create(
-    #           shape_id = data[0], 
-    #           shape_pt_lon = data[1], 
-    #           shape_pt_lat = data[2], 
-    #           shape_pt_sequence = data[3],
-    #         )
-    #         shapes.save()
+    for i, line in enumerate(shapesFile.read().split('\n')):
+        if line != '' and i != 0:
+            data = line.split(',')
+            shapes =  Shapes.objects.create(
+              shape_id = data[0], 
+              shape_pt_lon = data[1], 
+              shape_pt_lat = data[2], 
+              shape_pt_sequence = data[3],
+            )
+            shapes.save()
     stop_extensionsFile = open("data_to_import/stop_extensions.txt", "r")
-    # for i, line in enumerate(stop_extensionsFile.read().split('\n')):
-    #     if line != '' and i != 0:
-    #         data = line.split(',')
-    #         stop_extensions =  Stop_extensions.objects.create(
-    #           object_id = data[0], 
-    #           object_system = data[1], 
-    #           object_code = data[2],
-    #         )
-    #         stop_extensions.save()
+    for i, line in enumerate(stop_extensionsFile.read().split('\n')):
+        if line != '' and i != 0:
+            data = line.split(',')
+            stop_extensions =  Stop_extensions.objects.create(
+              object_id = data[0], 
+              object_system = data[1], 
+              object_code = data[2],
+            )
+            stop_extensions.save()
     stop_timesFile = open("data_to_import/stop_times.txt", "r")
-    # for i, line in enumerate(stop_timesFile.read().split('\n')):
-    #     if line != '' and i != 0:
-    #         data = line.split(',')
-    #         stop_times =  Stop_times.objects.create(
-    #           trip_id = data[0], 
-    #           arrival_time = data[1], 
-    #           departure_time = data[2], 
-    #           stop_id = data[3], 
-    #           stop_sequence = data[4],
-    #           stop_time_desc = data[5],
-    #           pickup_type = data[6],
-    #           drop_off_type = data[7],
-    #         )
-    #         stop_times.save()
+    for i, line in enumerate(stop_timesFile.read().split('\n')):
+        if line != '' and i != 0:
+            data = line.split(',')
+            stop_times =  Stop_times.objects.create(
+              trip_id = data[0], 
+              arrival_time = data[1], 
+              departure_time = data[2], 
+              stop_id = data[3], 
+              stop_sequence = data[4],
+              stop_time_desc = data[5],
+              pickup_type = data[6],
+              drop_off_type = data[7],
+            )
+            stop_times.save()
+        # Supprimer pour tout insérer
+        if i == 100:
+            break
     stopsFile = open("data_to_import/stops.txt", "r")
     for i, line in enumerate(stopsFile.read().split('\n')):
         if line != '' and i != 0:
@@ -301,31 +304,31 @@ def updateDB():
             )
             stops.save()
     transfersFile = open("data_to_import/transfers.txt", "r")
-    # for i, line in enumerate(transfersFile.read().split('\n')):
-    #     if line != '' and i != 0:
-    #         data = line.split(',')
-    #         transfers =  Transfers.objects.create(
-    #           from_stop_id = data[0], 
-    #           to_stop_id = data[1], 
-    #           transfer_type = data[2], 
-    #           min_transfer_time = data[3],
-    #         )
-    #         transfers.save()
+    for i, line in enumerate(transfersFile.read().split('\n')):
+        if line != '' and i != 0:
+            data = line.split(',')
+            transfers =  Transfers.objects.create(
+              from_stop_id = data[0], 
+              to_stop_id = data[1], 
+              transfer_type = data[2], 
+              min_transfer_time = data[3],
+            )
+            transfers.save()
     tripsFile = open("data_to_import/trips.txt", "r")
-    # for i, line in enumerate(tripsFile.read().split('\n')):
-    #     if line != '' and i != 0:
-    #         data = line.split(',')
-    #         trips =  Trips.objects.create(
-    #           route_id = data[0],
-    #           service_id = data[1], 
-    #           trip_id = data[2], 
-    #           trip_headsign = data[3], 
-    #           trip_short_name = data[4],
-    #           direction_id = data[5],
-    #           block_id = data[6],
-    #           wheelchair_accessible = data[7],
-    #           bikes_allowed = data[8],
-    #           trip_desc = data[9],
-    #           shape_id = data[10],
-    #         )
-    #         trips.save()
+    for i, line in enumerate(tripsFile.read().split('\n')):
+        if line != '' and i != 0:
+            data = line.split(',')
+            trips =  Trips.objects.create(
+              route_id = data[0],
+              service_id = data[1], 
+              trip_id = data[2], 
+              trip_headsign = data[3], 
+              trip_short_name = data[4],
+              direction_id = data[5],
+              block_id = data[6],
+              wheelchair_accessible = data[7],
+              bikes_allowed = data[8],
+              trip_desc = data[9],
+              shape_id = data[10],
+            )
+            trips.save()
