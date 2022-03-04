@@ -38,13 +38,33 @@ def HomeAPIView(request):
     return TemplateResponse(request, "index.html")
 
 
-class GTFSToJsonAPIView(APIView):
+class GTFSToJsonAPIView(APIView):    
     def get(self, *args, **kwargs):
+        print(kwargs['test'])
+        class Way:
+            def __init__(self, line, stop, direction, time, coordinates, colors):
+                self.line = line
+                self.stop = stop
+                self.direction = direction
+                self.time = time
+                self.coordinates = coordinates
+                self.colors = colors
         downloadGTFSFile()
-        categories = Agency.objects.all()
-        serializer = GTFSToJsonSerializer(categories, many=True)
-        # return Response(serializer.data)
-        return JsonResponse({"GTFSToJsonAPIView": "test"})
+        way =  Way(1,2,3,4,5,6)
+        print(way)
+        # categories['agency'] = Agency.objects.all()
+        # categories['calendar'] = Calendar.objects.all()
+        # categories['calendar_dates'] = Calendar_dates.objects.all()
+        # categories['routes'] = Routes.objects.all()
+        # categories['shapes'] = Shapes.objects.all()
+        # categories['stops'] = Stops.objects.all()
+        # categories['stop_times'] = Stop_times.objects.all()
+        # categories['transfers'] = Transfers.objects.all()
+        # categories['trips'] = Trips.objects.all()
+        # categories['stop_extensions'] = Stop_extensions.objects.all()
+        # serializer = GTFSToJsonSerializer(categories, many=True)
+        # return Response(way)
+        return JsonResponse(way.__dict__)
 
 
 class AgencyAPIView(APIView):
@@ -53,7 +73,6 @@ class AgencyAPIView(APIView):
         categories = Agency.objects.all()
         serializer = AgencySerializer(categories, many=True)
         return Response(serializer.data)
-        # return JsonResponse({"AgencyAPIView": "test"})
 
 
 
@@ -62,7 +81,7 @@ class CalendarAPIView(APIView):
         downloadGTFSFile()
         categories = Calendar.objects.all()
         serializer = CalendarSerializer(categories, many=True)
-        return JsonResponse({"CalendarAPIView": "test"})
+        return Response(serializer.data)
 
 
 class CalendarDatesAPIView(APIView):
@@ -70,7 +89,7 @@ class CalendarDatesAPIView(APIView):
         downloadGTFSFile()
         categories = Calendar_dates.objects.all()
         serializer = CalendarDatesSerializer(categories, many=True)
-        return JsonResponse({"CalendarDatesAPIView": "test"})
+        return Response(serializer.data)
 
 
 class RoutesAPIView(APIView):
@@ -78,7 +97,7 @@ class RoutesAPIView(APIView):
         downloadGTFSFile()
         categories = Routes.objects.all()
         serializer = RoutesSerializer(categories, many=True)
-        return JsonResponse({"RoutesAPIView": "test"})
+        return Response(serializer.data)
 
 
 class ShapesAPIView(APIView):
@@ -86,7 +105,7 @@ class ShapesAPIView(APIView):
         downloadGTFSFile()
         categories = Shapes.objects.all()
         serializer = ShapesSerializer(categories, many=True)
-        return JsonResponse({"ShapesAPIView": "test"})
+        return Response(serializer.data)
 
 
 class StopsAPIView(APIView):
@@ -94,7 +113,7 @@ class StopsAPIView(APIView):
         downloadGTFSFile()
         categories = Stops.objects.all()
         serializer = StopsSerializer(categories, many=True)
-        return JsonResponse({"StopsAPIView": "test"})
+        return Response(serializer.data)
 
 
 class StopsExtensionsAPIView(APIView):
@@ -102,7 +121,7 @@ class StopsExtensionsAPIView(APIView):
         downloadGTFSFile()
         categories = Stop_extensions.objects.all()
         serializer = StopsExtensionsSerializer(categories, many=True)
-        return JsonResponse({"StopsExtensionsAPIView": "test"})
+        return Response(serializer.data)
 
 
 class TransfersAPIView(APIView):
@@ -110,7 +129,7 @@ class TransfersAPIView(APIView):
         downloadGTFSFile()
         categories = Transfers.objects.all()
         serializer = TransfersSerializer(categories, many=True)
-        return JsonResponse({"TransfersAPIView": "test"})
+        return Response(serializer.data)
 
 
 class TripsAPIView(APIView):
@@ -118,7 +137,7 @@ class TripsAPIView(APIView):
         downloadGTFSFile()
         categories = Trips.objects.all()
         serializer = TripsSerializer(categories, many=True)
-        return JsonResponse({"TripsAPIView": "test"})
+        return Response(serializer.data)
 
 
 class StopTimesAPIView(APIView):
@@ -126,7 +145,7 @@ class StopTimesAPIView(APIView):
         downloadGTFSFile()
         categories = Stop_times.objects.all()
         serializer = StopTimesSerializer(categories, many=True)
-        return JsonResponse({"StopTimesAPIView": "test"})
+        return Response(serializer.data)
 
 
 start_time = time.time()

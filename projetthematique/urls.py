@@ -23,7 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('', HomeAPIView),
-    path('gtfs-to-json/', GTFSToJsonAPIView.as_view()),
     path('gtfs-to-json/agency/', AgencyAPIView.as_view()),
     path('gtfs-to-json/calendar/', CalendarAPIView.as_view()),
     path('gtfs-to-json/calendar-dates/', CalendarDatesAPIView.as_view()),
@@ -34,4 +33,5 @@ urlpatterns = [
     path('gtfs-to-json/transfers/', TransfersAPIView.as_view()),
     path('gtfs-to-json/trips/', TripsAPIView.as_view()),
     path('gtfs-to-json/stop-times/', StopTimesAPIView.as_view()),
+    path('gtfs-to-json/<test>', GTFSToJsonAPIView.as_view()),
 ]
