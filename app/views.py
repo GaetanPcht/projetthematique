@@ -218,7 +218,7 @@ def checkUpdateFile():
         zipurl =  ZipUrl.objects.create(zipurl_id = 0, zipurl_value=responseJSON["history"][0]["payload"]["permanent_url"])
         zipurl.save()
         return True
-    return True # Mettre à True pour récupérer les données
+    return False # Mettre à True pour récupérer les données
 
 def updateDB():
     Agency.objects.all().delete()
