@@ -38,10 +38,10 @@ python manage.py runserver
 - Github : [@GaetanPcht](https://github.com/GaetanPcht)
 
 👨 **Loïc MALVOISIN**
-- Github : [@GaetanPcht](https://github.com/malvoisinl)
+- Github : [@malvoisinl](https://github.com/malvoisinl)
 
 👨 **Théo METEYER**
-- Github : [@GaetanPcht](https://github.com/tmeteyer)
+- Github : [@tmeteyer](https://github.com/tmeteyer)
 
 👨 **Rémy POTTIEZ**
-- Github : [@GaetanPcht](https://github.com/Draclight)
+- Github : [@Draclight](https://github.com/Draclight)
