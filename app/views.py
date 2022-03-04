@@ -40,18 +40,38 @@ def HomeAPIView(request):
 
 class GTFSToJsonAPIView(APIView):    
     def get(self, *args, **kwargs):
-        print(kwargs['test'])
-        class Way:
-            def __init__(self, line, stop, direction, time, coordinates, colors):
-                self.line = line
-                self.stop = stop
-                self.direction = direction
-                self.time = time
-                self.coordinates = coordinates
-                self.colors = colors
+        stop = '"' + kwargs['test'] + '"'
+        stop = stop.upper().encode("utf-8")
+       
+        try:
+            stops = Stops.objects.filter(stop_name = stop )
+
+        except Stops.DoesNotExist:
+            stops = None
+
+        if stops != None:
+            stopSerializer = StopsSerializer(stops, many=True)
+            for stop in stopSerializer.data:
+                stopTimes = Stop_times.objects.filter(stop_id = stop["stop_id"])
+                stopTimesSerializer = StopTimesSerializer(stopTimes, many=True)
+                print(stopTimesSerializer.data)
+
+        else:
+            stopSerializer = {}
+
+
+        # print(stopSerializer.data)
+        # class Way:
+        #     def __init__(self, line, stop, direction, time, coordinates, colors):
+        #         self.line = line
+        #         self.stop = stop
+        #         self.direction = direction
+        #         self.time = time
+        #         self.coordinates = coordinates
+        #         self.colors = colors
         downloadGTFSFile()
-        way =  Way(1,2,3,4,5,6)
-        print(way)
+        # way =  Way(1,2,3,4,5,6)
+        # print(way)
         # categories['agency'] = Agency.objects.all()
         # categories['calendar'] = Calendar.objects.all()
         # categories['calendar_dates'] = Calendar_dates.objects.all()
@@ -64,7 +84,7 @@ class GTFSToJsonAPIView(APIView):
         # categories['stop_extensions'] = Stop_extensions.objects.all()
         # serializer = GTFSToJsonSerializer(categories, many=True)
         # return Response(way)
-        return JsonResponse(way.__dict__)
+        return Response(stopSerializer.data)
 
 
 class AgencyAPIView(APIView):
@@ -198,7 +218,7 @@ def checkUpdateFile():
         zipurl =  ZipUrl.objects.create(zipurl_id = 0, zipurl_value=responseJSON["history"][0]["payload"]["permanent_url"])
         zipurl.save()
         return True
-    return False # Mettre à True pour récupérer les données
+    return True # Mettre à True pour récupérer les données
 
 def updateDB():
     Agency.objects.all().delete()
@@ -303,15 +323,15 @@ def updateDB():
             )
             stop_times.save()
         # Supprimer pour tout insérer
-        if i == 100:
-            break
+        # if i == 100:
+        #     break
     stopsFile = open("data_to_import/stops.txt", "r")
     for i, line in enumerate(stopsFile.read().split('\n')):
         if line != '' and i != 0:
             data = line.split(',')
             stops =  Stops.objects.create(
               stop_id = data[0], 
-              stop_name = data[1], 
+              stop_name = data[1].upper().encode('utf-8'), 
               stop_desc = data[2], 
               stop_lat = data[3], 
               stop_lon = data[4],

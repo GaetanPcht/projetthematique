@@ -101,8 +101,8 @@ class Trips(models.Model):
 
 class Stop_times(models.Model):
     trip_id = models.CharField(max_length=140, default="")  # LIEN VERS TRIPS
-    arrival_time = models.TimeField(default="00:00:00")
-    departure_time = models.TimeField(default="00:00:00")
+    arrival_time = models.CharField(max_length=140, default="")
+    departure_time = models.CharField(max_length=140, default="")
     stop_id = models.CharField(max_length=140, default="")  # LIEN VERS AGENCY
     stop_sequence = models.CharField(max_length=140, default="")
     stop_time_desc = models.CharField(max_length=1, default="")
