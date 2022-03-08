@@ -10,6 +10,13 @@ class AgencyAdmin(admin.ModelAdmin):
         "agency_timezone",
         "agency_lang",
     )
+    search_fields = (
+        "agency_id",
+        "agency_name",
+        "agency_url",
+        "agency_timezone",
+        "agency_lang",
+    )
 
 
 admin.site.register(Agency, AgencyAdmin)
@@ -17,6 +24,18 @@ admin.site.register(Agency, AgencyAdmin)
 
 class CalendarAdmin(admin.ModelAdmin):
     list_display = (
+        "service_id",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday", 
+        "start_date",
+        "end_date",
+    )
+    search_fields = (
         "service_id",
         "monday",
         "tuesday",
@@ -39,6 +58,11 @@ class Calendar_datesAdmin(admin.ModelAdmin):
         "date",
         "exception_type",
     )
+    search_fields = (
+        "service_id",
+        "date",
+        "exception_type",
+    )
 
 
 admin.site.register(Calendar_dates, Calendar_datesAdmin)
@@ -56,6 +80,17 @@ class RoutesAdmin(admin.ModelAdmin):
         "route_color",
         "route_text_color",
     )
+    search_fields = (
+        "route_id",
+        "agency_id",
+        "route_short_name",
+        "route_long_name",
+        "route_desc",
+        "route_type",
+        "route_url",
+        "route_color",
+        "route_text_color",
+    )
 
 
 admin.site.register(Routes, RoutesAdmin)
@@ -63,6 +98,12 @@ admin.site.register(Routes, RoutesAdmin)
 
 class ShapesAdmin(admin.ModelAdmin):
     list_display = (
+        "shape_id",
+        "shape_pt_lon",
+        "shape_pt_lat",
+        "shape_pt_sequence",
+    )
+    search_fields = (
         "shape_id",
         "shape_pt_lon",
         "shape_pt_lat",
@@ -86,6 +127,18 @@ class StopsAdmin(admin.ModelAdmin):
         "parent_station",
         "wheelchair_boarding",
     )
+    search_fields = (
+        "stop_id",
+        "stop_name",
+        "stop_desc",
+        "stop_lat",
+        "stop_lon",
+        "zone_id",
+        "stop_url",
+        "location_type",
+        "parent_station",
+        "wheelchair_boarding",
+    )
 
 
 admin.site.register(Stops, StopsAdmin)
@@ -93,6 +146,11 @@ admin.site.register(Stops, StopsAdmin)
 
 class Stop_extensionsAdmin(admin.ModelAdmin):
     list_display = (
+        "object_id",
+        "object_system",
+        "object_code",
+    )
+    search_fields = (
         "object_id",
         "object_system",
         "object_code",
@@ -113,6 +171,16 @@ class Stop_timesAdmin(admin.ModelAdmin):
         "pickup_type",
         "drop_off_type",
     )
+    search_fields = (
+        "trip_id",
+        "arrival_time",
+        "departure_time",
+        "stop_id",
+        "stop_sequence",
+        "stop_time_desc",
+        "pickup_type",
+        "drop_off_type",
+    )
 
 
 admin.site.register(Stop_times, Stop_timesAdmin)
@@ -120,6 +188,12 @@ admin.site.register(Stop_times, Stop_timesAdmin)
 
 class TransfersAdmin(admin.ModelAdmin):
     list_display = (
+        "from_stop_id",
+        "to_stop_id",
+        "transfer_type",
+        "min_transfer_time",
+    )
+    search_fields = (
         "from_stop_id",
         "to_stop_id",
         "transfer_type",
@@ -144,12 +218,29 @@ class TripsAdmin(admin.ModelAdmin):
         "trip_desc",
         "shape_id",
     )
+    search_fields = (
+        "route_id",
+        "service_id",
+        "trip_id",
+        "trip_headsign",
+        "trip_short_name",
+        "direction_id",
+        "block_id",
+        "wheelchair_accessible",
+        "bikes_allowed",
+        "trip_desc",
+        "shape_id",
+    )
 
 
 admin.site.register(Trips, TripsAdmin)
 
 class ZipUrlAdmin(admin.ModelAdmin):
     list_display = (
+        "zipurl_id",
+        "zipurl_value",
+    )
+    search_fields = (
         "zipurl_id",
         "zipurl_value",
     )
