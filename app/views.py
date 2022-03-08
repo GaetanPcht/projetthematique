@@ -42,22 +42,46 @@ class GTFSToJsonAPIView(APIView):
     def get(self, *args, **kwargs):
         stop = '"' + kwargs['test'] + '"'
         stop = stop.upper().encode("utf-8")
-       
+        nextTransitTimes = []
         try:
             stops = Stops.objects.filter(stop_name = stop )
 
         except Stops.DoesNotExist:
             stops = None
-
         if stops != None:
             stopSerializer = StopsSerializer(stops, many=True)
             for stop in stopSerializer.data:
                 stopTimes = Stop_times.objects.filter(stop_id = stop["stop_id"])
                 stopTimesSerializer = StopTimesSerializer(stopTimes, many=True)
-                print(stopTimesSerializer.data)
-
+                for stopTime in stopTimesSerializer.data:
+                    trips = Trips.objects.filter(trip_id = stopTime["trip_id"])
+                    tripsSerializer = TripsSerializer(trips, many=True)
+                    for trip in tripsSerializer.data:
+                        routes = Routes.objects.filter(route_id = trip["route_id"])
+                        routesSerializer = RoutesSerializer(routes, many=True)
+                        for route in routesSerializer.data:
+                            nextTransitTimes.append(
+                                {
+                                    "line" : route["route_short_name"],
+                                    "stop" : stop["stop_name"],
+                                    "direction" : route["route_long_name"],
+                                    "time" : stopTime["arrival_time"],
+                                    "coordinates" : {
+                                        "latitude" : stop["stop_lat"],
+                                        "longitude" : stop["stop_lon"]
+                                    },
+                                    "colors" : {
+                                        "background" : route["route_color"],
+                                        "text" : route["route_text_color"]
+                                    },
+                                }
+                            )
         else:
             stopSerializer = {}
+
+        json_dump = json.dumps(nextTransitTimes)
+        json_object = json.loads(json_dump)
+        print(json_dump)
 
 
         # print(stopSerializer.data)
@@ -84,7 +108,7 @@ class GTFSToJsonAPIView(APIView):
         # categories['stop_extensions'] = Stop_extensions.objects.all()
         # serializer = GTFSToJsonSerializer(categories, many=True)
         # return Response(way)
-        return Response(stopSerializer.data)
+        return Response(json_object)
 
 
 class AgencyAPIView(APIView):
