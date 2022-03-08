@@ -28,7 +28,7 @@ Run this application
 
 ```bash
 python manage.py runserver
-or
+# or
 python manage.py runserver
 ```
 
@@ -42,13 +42,13 @@ If you don't have database. Remove folder migration then do the following comman
 
 ```bash
 py manage.py makemigrations
-or
+# or
 python manage.py makemigrations
 ```
 
 ```bash
 py manage.py migrate
-or
+# or
 python manage.py migrate
 ```
 
