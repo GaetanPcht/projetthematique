@@ -28,9 +28,37 @@ Run this application
 
 ```bash
 python manage.py runserver
+or
+python manage.py runserver
 ```
 
 127.0.0.1:8000/admin (root:root)
+
+## Error cases
+
+### No database
+
+If you don't have database. Remove folder migration then do the following command lines.
+
+```bash
+py manage.py makemigrations
+or
+python manage.py makemigrations
+```
+
+```bash
+py manage.py migrate
+or
+python manage.py migrate
+```
+
+### Module not found
+
+If a module is not found. Do the following command lines.
+
+```bash
+pip install <nameModule>
+```
 
 ## Contributors
 
