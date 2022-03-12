@@ -40,8 +40,9 @@ def HomeAPIView(request):
 
 class GTFSToJsonAPIView(APIView):    
     def get(self, *args, **kwargs):
+        downloadGTFSFile()
         stop = '"' + kwargs['test'] + '"'
-        stop = stop.upper().encode("utf-8")
+        stop = stop.upper()
         nextTransitTimes = []
         try:
             stops = Stops.objects.filter(stop_name = stop )
@@ -54,60 +55,35 @@ class GTFSToJsonAPIView(APIView):
                 stopTimes = Stop_times.objects.filter(stop_id = stop["stop_id"])
                 stopTimesSerializer = StopTimesSerializer(stopTimes, many=True)
                 for stopTime in stopTimesSerializer.data:
-                    trips = Trips.objects.filter(trip_id = stopTime["trip_id"])
-                    tripsSerializer = TripsSerializer(trips, many=True)
-                    for trip in tripsSerializer.data:
-                        routes = Routes.objects.filter(route_id = trip["route_id"])
-                        routesSerializer = RoutesSerializer(routes, many=True)
-                        for route in routesSerializer.data:
-                            nextTransitTimes.append(
-                                {
-                                    "line" : route["route_short_name"],
-                                    "stop" : stop["stop_name"],
-                                    "direction" : route["route_long_name"],
-                                    "time" : stopTime["arrival_time"],
-                                    "coordinates" : {
-                                        "latitude" : stop["stop_lat"],
-                                        "longitude" : stop["stop_lon"]
-                                    },
-                                    "colors" : {
-                                        "background" : route["route_color"],
-                                        "text" : route["route_text_color"]
-                                    },
-                                }
-                            )
+                    # trips = Trips.objects.filter(trip_id = stopTime["trip_id"])
+                    trip = Trips.objects.get(trip_id = stopTime["trip_id"])
+                    trip = TripsSerializer(trip, many=False)
+                    trip = trip.data
+                    route = Routes.objects.get(route_id = trip["route_id"])
+                    route = RoutesSerializer(route, many=False)
+                    route = route.data
+                    nextTransitTimes.append(
+                        {
+                            "line" : route["route_short_name"],
+                            "stop" : stop["stop_name"],
+                            "direction" : route["route_long_name"],
+                            "time" : stopTime["arrival_time"],
+                            "coordinates" : {
+                                "latitude" : stop["stop_lat"],
+                                "longitude" : stop["stop_lon"]
+                            },
+                            "colors" : {
+                                "background" : '#' + route["route_color"],
+                                "text" : '#' + route["route_text_color"]
+                            },
+                        }
+                    )
         else:
             stopSerializer = {}
 
         json_dump = json.dumps(nextTransitTimes)
         json_object = json.loads(json_dump)
-        print(json_dump)
-
-
-        # print(stopSerializer.data)
-        # class Way:
-        #     def __init__(self, line, stop, direction, time, coordinates, colors):
-        #         self.line = line
-        #         self.stop = stop
-        #         self.direction = direction
-        #         self.time = time
-        #         self.coordinates = coordinates
-        #         self.colors = colors
-        downloadGTFSFile()
-        # way =  Way(1,2,3,4,5,6)
-        # print(way)
-        # categories['agency'] = Agency.objects.all()
-        # categories['calendar'] = Calendar.objects.all()
-        # categories['calendar_dates'] = Calendar_dates.objects.all()
-        # categories['routes'] = Routes.objects.all()
-        # categories['shapes'] = Shapes.objects.all()
-        # categories['stops'] = Stops.objects.all()
-        # categories['stop_times'] = Stop_times.objects.all()
-        # categories['transfers'] = Transfers.objects.all()
-        # categories['trips'] = Trips.objects.all()
-        # categories['stop_extensions'] = Stop_extensions.objects.all()
-        # serializer = GTFSToJsonSerializer(categories, many=True)
-        # return Response(way)
+        
         return Response(json_object)
 
 
@@ -194,22 +170,6 @@ class StopTimesAPIView(APIView):
 
 start_time = time.time()
 
-
-# def downloadGTFSFile():
-#     print(round(time.time() - start_time, 1), "ending function")
-#     files = glob.glob("data_to_import/*")
-#     for f in files:
-#         os.remove(f)
-#     url = "https://transport-data-gouv-fr-resource-history-prod.cellar-c2.services.clever-cloud.com/1e116130-3670-496d-b8dc-cb8c628dd8b6/1e116130-3670-496d-b8dc-cb8c628dd8b6.20220217.120214.919497.zip"
-#     urllib.request.urlretrieve(url, "data_to_import/data.zip")
-
-#     with zipfile.ZipFile("data_to_import/data.zip", "r") as zip_ref:
-#         zip_ref.extractall("data_to_import")
-
-#     zipFile = glob.glob("data_to_import/data.zip")
-#     for f in zipFile:
-#         os.remove(f)
-
 def downloadGTFSFile():
     if checkUpdateFile():
         files = glob.glob("data_to_import/*")
@@ -219,7 +179,7 @@ def downloadGTFSFile():
         print(url)
         urllib.request.urlretrieve(url, "data_to_import/data.zip")
 
-        with zipfile.ZipFile("data_to_import/data.zip", "r") as zip_ref:
+        with zipfile.ZipFile("data_to_import/data.zip", 'r') as zip_ref:
             zip_ref.extractall("data_to_import")
 
         zipFile = glob.glob("data_to_import/data.zip")
@@ -255,7 +215,7 @@ def updateDB():
     Stops.objects.all().delete()
     Transfers.objects.all().delete()
     Trips.objects.all().delete()
-    agencyFile = open("data_to_import/agency.txt", "r")
+    agencyFile = open("data_to_import/agency.txt", encoding="UTF-8")
     for i, line in enumerate(agencyFile.read().split('\n')):
         if line != '' and i != 0:
             data = line.split(',')
@@ -267,7 +227,7 @@ def updateDB():
                 agency_lang = data[4],
             )
             agency.save()
-    calendar_datesFile = open("data_to_import/calendar_dates.txt", "r")
+    calendar_datesFile = open("data_to_import/calendar_dates.txt", encoding="UTF-8")
     for i, line in enumerate(calendar_datesFile.read().split('\n')):
         if line != '' and i != 0:
             data = line.split(',')
@@ -277,7 +237,7 @@ def updateDB():
               exception_type = data[2], 
             )
             calendar_dates.save()
-    calendarFile = open("data_to_import/calendar.txt", "r")
+    calendarFile = open("data_to_import/calendar.txt", encoding="UTF-8")
     for i, line in enumerate(calendarFile.read().split('\n')):
         if line != '' and i != 0:
             data = line.split(',')
@@ -294,7 +254,7 @@ def updateDB():
               end_date = data[9],
           )
             calendar.save()
-    routesFile = open("data_to_import/routes.txt", "r")
+    routesFile = open("data_to_import/routes.txt", encoding="UTF-8")
     for i, line in enumerate(routesFile.read().split('\n')):
         if line != '' and i != 0:
             data = line.split(',')
@@ -310,7 +270,7 @@ def updateDB():
               route_text_color = data[8],
             )
             routes.save()
-    shapesFile = open("data_to_import/shapes.txt", "r")
+    shapesFile = open("data_to_import/shapes.txt", encoding="UTF-8")
     for i, line in enumerate(shapesFile.read().split('\n')):
         if line != '' and i != 0:
             data = line.split(',')
@@ -321,7 +281,7 @@ def updateDB():
               shape_pt_sequence = data[3],
             )
             shapes.save()
-    stop_extensionsFile = open("data_to_import/stop_extensions.txt", "r")
+    stop_extensionsFile = open("data_to_import/stop_extensions.txt", encoding="UTF-8")
     for i, line in enumerate(stop_extensionsFile.read().split('\n')):
         if line != '' and i != 0:
             data = line.split(',')
@@ -331,7 +291,7 @@ def updateDB():
               object_code = data[2],
             )
             stop_extensions.save()
-    stop_timesFile = open("data_to_import/stop_times.txt", "r")
+    stop_timesFile = open("data_to_import/stop_times.txt", encoding="UTF-8")
     for i, line in enumerate(stop_timesFile.read().split('\n')):
         if line != '' and i != 0:
             data = line.split(',')
@@ -349,13 +309,13 @@ def updateDB():
         # Supprimer pour tout insérer
         # if i == 100:
         #     break
-    stopsFile = open("data_to_import/stops.txt", "r")
+    stopsFile = open("data_to_import/stops.txt", encoding="UTF-8")
     for i, line in enumerate(stopsFile.read().split('\n')):
         if line != '' and i != 0:
             data = line.split(',')
             stops =  Stops.objects.create(
               stop_id = data[0], 
-              stop_name = data[1].upper().encode('utf-8'), 
+              stop_name = data[1].upper(), 
               stop_desc = data[2], 
               stop_lat = data[3], 
               stop_lon = data[4],
@@ -366,7 +326,7 @@ def updateDB():
               wheelchair_boarding = data[9],
             )
             stops.save()
-    transfersFile = open("data_to_import/transfers.txt", "r")
+    transfersFile = open("data_to_import/transfers.txt", encoding="UTF-8")
     for i, line in enumerate(transfersFile.read().split('\n')):
         if line != '' and i != 0:
             data = line.split(',')
@@ -377,7 +337,7 @@ def updateDB():
               min_transfer_time = data[3],
             )
             transfers.save()
-    tripsFile = open("data_to_import/trips.txt", "r")
+    tripsFile = open("data_to_import/trips.txt", encoding="UTF-8")
     for i, line in enumerate(tripsFile.read().split('\n')):
         if line != '' and i != 0:
             data = line.split(',')
