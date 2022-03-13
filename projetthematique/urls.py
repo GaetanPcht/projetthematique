@@ -33,5 +33,6 @@ urlpatterns = [
     path('gtfs-to-json/transfers/', TransfersAPIView.as_view()),
     path('gtfs-to-json/trips/', TripsAPIView.as_view()),
     path('gtfs-to-json/stop-times/', StopTimesAPIView.as_view()),
-    path('gtfs-to-json/<test>', GTFSToJsonAPIView.as_view()),
+    path('gtfs-to-json/<stop>', GTFSToJsonAPIView.as_view()),
+    path('gtfs-to-json/<stop>/<time>', GTFSToJsonAPIView.as_view()),
 ]

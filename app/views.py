@@ -5,6 +5,7 @@ from django.template.response import TemplateResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
+from datetime import date, datetime, time, timedelta
 from app.models import (
     Agency,
     Calendar,
@@ -41,11 +42,17 @@ def HomeAPIView(request):
 class GTFSToJsonAPIView(APIView):    
     def get(self, *args, **kwargs):
         downloadGTFSFile()
-        stop = '"' + kwargs['test'] + '"'
-        stop = stop.upper()
+        stopParam = '"' + kwargs['stop'] + '"'
+        stopParam = stopParam.upper()
+        print('time' in kwargs)
+        # time format "h:m:s"
+        if 'time' in kwargs:
+            timeParam = datetime.strptime(kwargs['time'], '%H:%M:%S').time()
+            latestTime = (datetime.combine(date.today(), time(timeParam.hour, timeParam.minute, timeParam.second)) + timedelta(hours=1, minutes=30)).time()
         nextTransitTimes = []
+
         try:
-            stops = Stops.objects.filter(stop_name = stop )
+            stops = Stops.objects.filter(stop_name = stopParam )
 
         except Stops.DoesNotExist:
             stops = None
@@ -55,29 +62,37 @@ class GTFSToJsonAPIView(APIView):
                 stopTimes = Stop_times.objects.filter(stop_id = stop["stop_id"])
                 stopTimesSerializer = StopTimesSerializer(stopTimes, many=True)
                 for stopTime in stopTimesSerializer.data:
-                    # trips = Trips.objects.filter(trip_id = stopTime["trip_id"])
-                    trip = Trips.objects.get(trip_id = stopTime["trip_id"])
-                    trip = TripsSerializer(trip, many=False)
-                    trip = trip.data
-                    route = Routes.objects.get(route_id = trip["route_id"])
-                    route = RoutesSerializer(route, many=False)
-                    route = route.data
-                    nextTransitTimes.append(
-                        {
-                            "line" : route["route_short_name"],
-                            "stop" : stop["stop_name"],
-                            "direction" : route["route_long_name"],
-                            "time" : stopTime["arrival_time"],
-                            "coordinates" : {
-                                "latitude" : stop["stop_lat"],
-                                "longitude" : stop["stop_lon"]
-                            },
-                            "colors" : {
-                                "background" : '#' + route["route_color"],
-                                "text" : '#' + route["route_text_color"]
-                            },
-                        }
-                    )
+                    getTime = False
+                    if 'time' in kwargs:
+                        arrivalTime = datetime.strptime(stopTime["arrival_time"], '%H:%M:%S').time()
+                        if time_in_range(timeParam, latestTime, arrivalTime):
+                            getTime = True
+                    else:
+                        getTime= True
+                    
+                    if getTime:
+                        trip = Trips.objects.get(trip_id = stopTime["trip_id"])
+                        trip = TripsSerializer(trip, many=False)
+                        trip = trip.data
+                        route = Routes.objects.get(route_id = trip["route_id"])
+                        route = RoutesSerializer(route, many=False)
+                        route = route.data
+                        nextTransitTimes.append(
+                            {
+                                "line" : route["route_short_name"],
+                                "stop" : stop["stop_name"],
+                                "direction" : route["route_long_name"],
+                                "time" : stopTime["arrival_time"],
+                                "coordinates" : {
+                                    "latitude" : stop["stop_lat"],
+                                    "longitude" : stop["stop_lon"]
+                                },
+                                "colors" : {
+                                    "background" : '#' + route["route_color"],
+                                    "text" : '#' + route["route_text_color"]
+                                },
+                            }
+                        )
         else:
             stopSerializer = {}
 
@@ -166,9 +181,6 @@ class StopTimesAPIView(APIView):
         categories = Stop_times.objects.all()
         serializer = StopTimesSerializer(categories, many=True)
         return Response(serializer.data)
-
-
-start_time = time.time()
 
 def downloadGTFSFile():
     if checkUpdateFile():
@@ -355,3 +367,10 @@ def updateDB():
               shape_id = data[10],
             )
             trips.save()
+
+def time_in_range(start, end, x):
+    """Return true if x is in the range [start, end]"""
+    if start <= end:
+        return start <= x <= end
+    else:
+        return start <= x or x <= end
