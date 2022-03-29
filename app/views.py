@@ -70,9 +70,10 @@ class GTFSToJsonAPIView(APIView):
                 for stopTime in stopTimesSerializer.data:
                     getTime = False
                     fullTime = ''
+                    arrivalTime = stopTime["arrival_time"]
+
                     # Récupération des données comprises seulement entre les limites d'heures
                     if 'time' in kwargs:
-                        arrivalTime = stopTime["arrival_time"]
                         # Pour les heures au format : "24:06"
                         if arrivalTime[:2] == "24":
                             arrivalTime = "00" + arrivalTime[2:]
@@ -82,6 +83,8 @@ class GTFSToJsonAPIView(APIView):
                         if time_in_range(timeParam, latestTime, arrivalTime):
                             getTime = True
                     else:
+                        fullTime = str(date.today().strftime('%Y%m%d')) + '-' + str(datetime.strptime(arrivalTime, '%H:%M:%S').time())
+                        fullTime = datetime.strptime(fullTime, '%Y%m%d-%H:%M:%S').isoformat()
                         getTime= True
                     if getTime:
                         trip = Trips.objects.get(trip_id = stopTime["trip_id"])
