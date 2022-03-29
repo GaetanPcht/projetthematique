@@ -41,61 +41,96 @@ def HomeAPIView(request):
 
 class GTFSToJsonAPIView(APIView):    
     def get(self, *args, **kwargs):
+        # telechargement des fichiers gtfs et mise à jour de la bdd si neccessaire
         downloadGTFSFile()
+        # récupération du nom de l'arret + mise en forme pour coller au format de la bdd
         stopParam = '"' + kwargs['stop'] + '"'
         stopParam = stopParam.upper()
-        print('time' in kwargs)
-        # time format "h:m:s"
+
+        # Si un horraire est donné, on initialise les données d'heure de début et de fin
         if 'time' in kwargs:
-            timeParam = datetime.strptime(kwargs['time'], '%H:%M:%S').time()
+            # date format "yyyymmdd-h:m:s"
+            dayParam = datetime.strptime(kwargs['time'], '%Y%m%d-%H:%M:%S')
+            timeParam = dayParam.time()
             latestTime = (datetime.combine(date.today(), time(timeParam.hour, timeParam.minute, timeParam.second)) + timedelta(hours=1, minutes=30)).time()
+        
         nextTransitTimes = []
 
+        # On recherche dans la bdd une liste d'arrêts 
         try:
             stops = Stops.objects.filter(stop_name = stopParam )
-
         except Stops.DoesNotExist:
             stops = None
         if stops != None:
             stopSerializer = StopsSerializer(stops, many=True)
+            # On ajoute chaque arrêt à la liste d'arrêts 
             for stop in stopSerializer.data:
                 stopTimes = Stop_times.objects.filter(stop_id = stop["stop_id"])
-                stopTimesSerializer = StopTimesSerializer(stopTimes, many=True)
+                stopTimesSerializer = StopTimesSerializer(stopTimes, many=True)                
                 for stopTime in stopTimesSerializer.data:
                     getTime = False
+                    fullTime = ''
+                    # Récupération des données comprises seulement entre les limites d'heures
                     if 'time' in kwargs:
-                        arrivalTime = datetime.strptime(stopTime["arrival_time"], '%H:%M:%S').time()
+                        arrivalTime = stopTime["arrival_time"]
+                        # Pour les heures au format : "24:06"
+                        if arrivalTime[:2] == "24":
+                            arrivalTime = "00" + arrivalTime[2:]
+                        fullTime = str(dayParam.strftime('%Y%m%d')) + '-' + str(datetime.strptime(arrivalTime, '%H:%M:%S').time())
+                        fullTime = datetime.strptime(fullTime, '%Y%m%d-%H:%M:%S').isoformat()
+                        arrivalTime = datetime.strptime(arrivalTime, '%H:%M:%S').time()
                         if time_in_range(timeParam, latestTime, arrivalTime):
                             getTime = True
                     else:
                         getTime= True
-                    
                     if getTime:
                         trip = Trips.objects.get(trip_id = stopTime["trip_id"])
                         trip = TripsSerializer(trip, many=False)
                         trip = trip.data
-                        route = Routes.objects.get(route_id = trip["route_id"])
-                        route = RoutesSerializer(route, many=False)
-                        route = route.data
-                        nextTransitTimes.append(
-                            {
-                                "line" : route["route_short_name"],
-                                "stop" : stop["stop_name"],
-                                "direction" : route["route_long_name"],
-                                "time" : stopTime["arrival_time"],
-                                "coordinates" : {
-                                    "latitude" : stop["stop_lat"],
-                                    "longitude" : stop["stop_lon"]
-                                },
-                                "colors" : {
-                                    "background" : '#' + route["route_color"],
-                                    "text" : '#' + route["route_text_color"]
-                                },
-                            }
-                        )
+                        getDay = False
+                        # Une ligne peut changer d'horaires en fonction d'une période donnée, récupération des données comprises
+                        # seulement sur la période recherchée
+                        if 'time' in kwargs:
+                            day = None
+                            try:
+                                day = Calendar.objects.get(service_id = trip["service_id"])
+                            except Calendar.DoesNotExist:
+                                day = None
+                                getDay = True
+                            if day != None: 
+                                day = CalendarSerializer(day, many=False)
+                                day = day.data
+                                dateStart = datetime.strptime(day["start_date"], '%Y%m%d')
+                                dateEnd = datetime.strptime(day["end_date"], '%Y%m%d')
+                                if day[dayParam.strftime("%A").lower()] == "1" and dateStart <= dayParam <= dateEnd:
+                                    getDay = True
+                        else:
+                            getDay= True
+
+                        if getDay:
+                            route = Routes.objects.get(route_id = trip["route_id"])
+                            route = RoutesSerializer(route, many=False)
+                            route = route.data
+                            # Ajout d'un nouvel arrêt à la liste d'arrêts
+                            nextTransitTimes.append(
+                                {
+                                    "line" : route["route_short_name"],
+                                    "stop" : stop["stop_name"],
+                                    "direction" : route["route_long_name"],
+                                    "time" : fullTime,
+                                    "coordinates" : {
+                                        "latitude" : stop["stop_lat"],
+                                        "longitude" : stop["stop_lon"]
+                                    },
+                                    "colors" : {
+                                        "background" : '#' + route["route_color"],
+                                        "text" : '#' + route["route_text_color"]
+                                    },
+                                }
+                            )
         else:
             stopSerializer = {}
-
+        # conversion au format json des données
         json_dump = json.dumps(nextTransitTimes)
         json_object = json.loads(json_dump)
         
@@ -187,16 +222,17 @@ def downloadGTFSFile():
         files = glob.glob("data_to_import/*")
         for f in files:
             os.remove(f)
+        # telechargement des données ametis 
         url = ZipUrl.objects.get(zipurl_id = 0).get()
-        print(url)
         urllib.request.urlretrieve(url, "data_to_import/data.zip")
-
+        # dezip les données
         with zipfile.ZipFile("data_to_import/data.zip", 'r') as zip_ref:
             zip_ref.extractall("data_to_import")
 
         zipFile = glob.glob("data_to_import/data.zip")
         for f in zipFile:
             os.remove(f)
+            # update de la bdd
         updateDB()
 
 
@@ -206,6 +242,8 @@ def checkUpdateFile():
     response = requests.get(url, headers=headers)
     responseJSON = json.loads(response.text)
     try:
+        # si l'url retenue en bdd est différente de l'url des données de transports, les documents gtfs ont été mis 
+        # à jour, on renvoit True
         if ZipUrl.objects.get(zipurl_id = 0).get() != responseJSON["history"][0]["payload"]["permanent_url"]:
             zipurl =  ZipUrl.objects.create(zipurl_id = 0, zipurl_value=responseJSON["history"][0]["payload"]["permanent_url"])
             zipurl.save()
@@ -216,6 +254,7 @@ def checkUpdateFile():
         return True
     return False # Mettre à True pour récupérer les données
 
+# remplacement de l'ancienne bdd par la nouvelle
 def updateDB():
     Agency.objects.all().delete()
     Calendar_dates.objects.all().delete()
