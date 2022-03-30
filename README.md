@@ -45,7 +45,7 @@ Get JSON with stop parameter
 ```
 
 
-Get JSON with stop and time parameters
+Get JSON with stop and time parameters (shows upcoming stops within 1.5hours after the specified time)
 
 ```bash
 127.0.0.1:8000/gtfs-to-json/<stop name>/YYYYMMDD-hh:mm:ss
