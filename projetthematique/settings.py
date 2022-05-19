@@ -125,3 +125,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,  'static')
+
+OPEN_DATA_URL = "https://transport.data.gouv.fr/api/datasets/6033a87b4e276fd6499986bf"
