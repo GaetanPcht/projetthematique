@@ -52,6 +52,12 @@ Get JSON with stop and time parameters (shows upcoming stops within 1.5hours aft
 (ex : 127.0.0.1:8000/gtfs-to-json/UPJV SAINT-LEU/20220330-14:00:00)
 ```
 
+
+Update database
+```bash
+python manage.py update_db
+```
+
 ## Error cases
 
 ### No database
